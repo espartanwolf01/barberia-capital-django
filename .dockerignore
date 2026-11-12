@@ -1,0 +1,11 @@
+entorno/
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.git/
+.env
+.env.*
+db.sqlite3
+db.sqlite3-journal
+media/
