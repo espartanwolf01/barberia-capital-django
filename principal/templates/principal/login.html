@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Iniciar sesión | Peluquería Capital</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --gold: #C9A84C;
+        --gold-light: #E4C97E;
+        --dark: #0E0C0A;
+        --dark-2: #181410;
+        --dark-3: #221E18;
+        --text: #EDE8DF;
+        --text-muted: #8A7E6E;
+        --error: #d96b6b;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+            radial-gradient(circle at top, #292117 0%, var(--dark) 55%);
+        color: var(--text);
+        font-family: 'Montserrat', sans-serif;
+        padding: 30px 15px;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 500px;
+        background: rgba(24, 20, 16, 0.96);
+        border: 1px solid rgba(201, 168, 76, 0.35);
+        border-radius: 12px;
+        padding: 45px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .logo {
+        text-align: center;
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+        font-size: 36px;
+        color: var(--gold-light);
+        margin-bottom: 8px;
+    }
+
+    .subtitulo {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-bottom: 32px;
+    }
+
+    .error {
+        background: rgba(217, 107, 107, 0.12);
+        border: 1px solid rgba(217, 107, 107, 0.4);
+        color: #e99595;
+        padding: 12px 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    .campo {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--gold-light);
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px 15px;
+        background: var(--dark-3);
+        border: 1px solid #3a3329;
+        border-radius: 6px;
+        color: var(--text);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    input:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.12);
+    }
+
+    input::placeholder {
+        color: #665d52;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 14px;
+        border: none;
+        border-radius: 6px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #17120c;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(201, 168, 76, 0.2);
+    }
+
+    .registro-link {
+        display: block;
+        text-align: center;
+        margin-top: 25px;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .registro-link:hover {
+        color: var(--gold-light);
+    }
+
+    .volver {
+        display: block;
+        text-align: center;
+        margin-top: 12px;
+        color: var(--gold);
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .volver:hover {
+        color: var(--gold-light);
+    }
+
+    @media (max-width: 600px) {
+        .login-container {
+            padding: 30px 25px;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+  <div class="logo">💈</div>
+
+  <h1>Iniciar sesión</h1>
+
+  <p class="subtitulo">
+    Accede a tu cuenta de Peluquería Capital
+  </p>
+
+  {% if error %}
+  <div class="error" role="alert">{{ error }}</div>
+{% endif %}
+
+  <form action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+
+    <div class="campo">
+      <label for="dato">Correo electrónico</label>
+<input
+        type="email"
+        id="dato"
+        name="dato"
+        placeholder="correo@ejemplo.com"
+        autocomplete="username"
+        required>
+    </div>
+
+    <div class="campo">
+      <label for="password">Contraseña</label>
+      <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Ingresa tu contraseña"
+              required>
+    </div>
+
+    <button type="submit">
+      Iniciar sesión
+    </button>
+
+  </form>
+
+  <a class="registro-link" href="/registro">
+    ¿No tienes una cuenta? Regístrate
+  </a>
+
+  <a class="volver" href="/">
+    ← Volver al inicio
+  </a>
+
+</div>
+
+</body>
+
+</html>
