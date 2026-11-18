@@ -1,10 +1,16 @@
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib import messages
+from django.contrib.auth import (
+    authenticate,
+    get_user_model,
+    login,
+    logout,
+)
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
-from django.contrib.auth import logout
 from django.views.decorators.http import require_POST
 
-from .forms import RegistroForm
+from .forms import EditarPerfilForm, RegistroForm
 from .models import Perfil
 
 Usuario = get_user_model()
@@ -59,6 +65,7 @@ def registro(request):
         {"formulario": formulario},
     )
 
+
 def iniciar_sesion(request):
     if request.user.is_authenticated:
         return redirect("inicio")
@@ -87,7 +94,37 @@ def iniciar_sesion(request):
         {"error": error},
     )
 
+
 @require_POST
 def cerrar_sesion(request):
     logout(request)
     return redirect("inicio")
+
+
+@login_required(login_url="login")
+def perfil(request):
+    datos_perfil = Perfil.objects.filter(
+        usuario=request.user
+    ).first()
+
+    if datos_perfil is None:
+        datos_perfil = Perfil(usuario=request.user)
+
+    formulario = EditarPerfilForm(
+        request.POST if request.method == "POST" else None,
+        instance=datos_perfil,
+    )
+
+    if request.method == "POST" and formulario.is_valid():
+        formulario.save()
+        messages.success(request, "Tus datos se actualizaron correctamente.")
+        return redirect("perfil")
+
+    return render(
+        request,
+        "principal/perfil.html",
+        {
+            "datos_perfil": datos_perfil,
+            "formulario": formulario,
+        },
+    )

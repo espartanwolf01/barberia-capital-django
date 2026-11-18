@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 
+from .models import Perfil
+
 Usuario = get_user_model()
 
 
@@ -50,3 +52,36 @@ class RegistroForm(forms.Form):
                 self.add_error("password", errores)
 
         return datos
+
+
+class EditarPerfilForm(forms.ModelForm):
+    nombre_completo = forms.CharField(
+        label="Nombre completo",
+        max_length=150,
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Tu nombre completo",
+                "autocomplete": "name",
+            }
+        ),
+    )
+
+    telefono = forms.RegexField(
+        label="Teléfono",
+        regex=r"^\+?[0-9\s()-]{7,20}$",
+        max_length=20,
+        error_messages={
+            "invalid": "Escribe un teléfono válido.",
+        },
+        widget=forms.TextInput(
+            attrs={
+                "type": "tel",
+                "placeholder": "Tu número de teléfono",
+                "autocomplete": "tel",
+            }
+        ),
+    )
+
+    class Meta:
+        model = Perfil
+        fields = ["nombre_completo", "telefono"]
