@@ -13,3 +13,101 @@ class Perfil(models.Model):
 
     def __str__(self):
         return self.nombre_completo
+
+
+class Servicio(models.Model):
+    class Categoria(models.TextChoices):
+        CORTES = "cortes", "Cortes"
+        BARBA = "barba", "Barba"
+        COLOR = "color", "Coloración"
+
+    nombre = models.CharField(max_length=100)
+    categoria = models.CharField(
+        max_length=10,
+        choices=Categoria.choices,
+    )
+    precio = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["categoria", "nombre"]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(precio__gte=0),
+                name="servicio_precio_no_negativo",
+            ),
+        ]
+
+    def __str__(self):
+        return self.nombre
+
+
+class Barbero(models.Model):
+    nombre = models.CharField(max_length=150)
+    especialidad = models.CharField(
+        max_length=150,
+        blank=True,
+    )
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["nombre"]
+
+    def __str__(self):
+        return self.nombre
+
+
+class Cita(models.Model):
+    class Estado(models.TextChoices):
+        PENDIENTE = "pendiente", "Pendiente"
+        ATENDIDA = "atendida", "Atendida"
+        CANCELADA = "cancelada", "Cancelada"
+
+    cliente = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="citas",
+    )
+    servicio = models.ForeignKey(
+        Servicio,
+        on_delete=models.PROTECT,
+        related_name="citas",
+    )
+    barbero = models.ForeignKey(
+        Barbero,
+        on_delete=models.PROTECT,
+        related_name="citas",
+    )
+    fecha = models.DateField()
+    hora = models.TimeField()
+    notas = models.TextField(
+        blank=True,
+        max_length=1000,
+    )
+    estado = models.CharField(
+        max_length=10,
+        choices=Estado.choices,
+        default=Estado.PENDIENTE,
+    )
+    fecha_asignacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-fecha", "-hora"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["barbero", "fecha", "hora"],
+                condition=models.Q(
+                    estado__in=["pendiente", "atendida"],
+                ),
+                name="cita_turno_ocupado_unico",
+            ),
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.cliente} - {self.servicio} "
+            f"- {self.fecha} {self.hora}"
+        )

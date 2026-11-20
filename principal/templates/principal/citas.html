@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Citas — Peluquería Capital</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Montserrat:wght@300;400;500;600&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E4C97E;
+            --dark: #0E0C0A;
+            --dark-2: #181410;
+            --dark-3: #221E18;
+            --text: #EDE8DF;
+            --text-muted: #ADA193;
+            --error: #ED9696;
+            --success: #91CBA1;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding: 24px 5%;
+            background: rgba(14, 12, 10, .96);
+            border-bottom: 1px solid rgba(201, 168, 76, .2);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 23px;
+            font-weight: 700;
+            color: var(--gold);
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+            gap: 24px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--gold-light);
+        }
+
+        .cuenta {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-cuenta {
+            display: inline-block;
+            padding: 10px 14px;
+            background: transparent;
+            border: 1px solid rgba(201, 168, 76, .4);
+            color: var(--gold);
+            text-decoration: none;
+            font: inherit;
+            font-size: 11px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-cuenta:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .nosotros {
+            padding: 70px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            border-bottom: 1px solid rgba(201, 168, 76, .1);
+        }
+
+        .eyebrow {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .nosotros h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 4vw, 52px);
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+
+        em {
+            color: var(--gold);
+        }
+
+        .descripcion {
+            color: var(--text-muted);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 21px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .nosotros h2 {
+            color: var(--gold-light);
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .razon {
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+        }
+
+        .razon h3 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .razon p {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .citas-section {
+            padding: 65px 5%;
+        }
+
+        .citas-header,
+        .mis-citas-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .citas-header h2,
+        .mis-citas-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(30px, 4vw, 46px);
+        }
+
+        .citas-header p:last-child,
+        .mis-citas-header p:last-child {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 36px;
+        }
+
+        .step {
+            text-align: center;
+            max-width: 140px;
+        }
+
+        .step-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 10px;
+            border: 1px solid rgba(201, 168, 76, .4);
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .step-text {
+            color: var(--text-muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .form-wrapper {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 38px;
+            background: var(--dark-2);
+            border: 1px solid rgba(201, 168, 76, .18);
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 24px;
+            background: rgba(145, 203, 161, .08);
+            border: 1px solid rgba(145, 203, 161, .3);
+            color: var(--success);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .message.error,
+        .error-box {
+            background: rgba(237, 150, 150, .08);
+            border: 1px solid rgba(237, 150, 150, .3);
+            color: var(--error);
+        }
+
+        .error-box {
+            padding: 15px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .error-box p + p {
+            margin-top: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            min-width: 0;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            min-width: 0;
+            padding: 14px;
+            background: var(--dark-3);
+            border: 1px solid rgba(201, 168, 76, .25);
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        .form-input[readonly] {
+            color: var(--text-muted);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .form-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .error-msg {
+            color: var(--error);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .form-nota {
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .form-nota a {
+            color: var(--gold-light);
+        }
+
+        .form-submit {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            grid-column: 1 / -1;
+            padding-top: 12px;
+        }
+
+        .btn-reservar {
+            display: inline-block;
+            padding: 16px 24px;
+            background: var(--gold);
+            border: 1px solid var(--gold);
+            color: var(--dark);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn-reservar:hover {
+            background: var(--gold-light);
+        }
+
+        .mis-citas {
+            max-width: 1100px;
+            margin: 75px auto 0;
+        }
+
+        .citas-grid {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(min(280px, 100%), 1fr)
+            );
+            gap: 24px;
+        }
+
+        .cita-card {
+            min-width: 0;
+            padding: 28px;
+            background: var(--dark-2);
+            border: 1px solid rgba(201, 168, 76, .2);
+        }
+
+        .cita-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .cita-numero {
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 6px 9px;
+            border: 1px solid rgba(201, 168, 76, .4);
+            color: var(--gold-light);
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .estado-atendida {
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .estado-cancelada {
+            color: var(--error);
+            border-color: var(--error);
+        }
+
+        .cita-servicio {
+            font-family: 'Playfair Display', serif;
+            font-size: 23px;
+            color: var(--gold-light);
+            margin-bottom: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .cita-datos p {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        .cita-datos strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .cita-notas {
+            padding-top: 18px;
+            margin-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .reprogramar {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(201, 168, 76, .2);
+        }
+
+        .reprogramar summary {
+            color: var(--gold-light);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .reprogramar-form {
+            display: grid;
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .btn-cancelar-cita {
+            margin-top: 24px;
+            padding: 11px 16px;
+            background: transparent;
+            border: 1px solid rgba(237, 150, 150, .5);
+            color: var(--error);
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .btn-cancelar-cita:hover {
+            background: rgba(237, 150, 150, .1);
+        }
+
+        .sin-citas {
+            padding: 40px 24px;
+            background: var(--dark-2);
+            border: 1px solid rgba(201, 168, 76, .18);
+            text-align: center;
+        }
+
+        .sin-citas h3 {
+            color: var(--gold-light);
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .sin-citas p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .footer {
+            padding: 35px 20px;
+            border-top: 1px solid rgba(201, 168, 76, .15);
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .footer strong {
+            color: var(--gold);
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        summary:focus-visible {
+            outline: 2px solid var(--gold-light);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 1000px) {
+            .header {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .nosotros {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 45px 5%;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-wrapper {
+                padding: 26px 20px;
+            }
+
+            .form-submit {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .nav {
+                gap: 14px;
+            }
+
+            .nav a {
+                font-size: 10px;
+            }
+
+            .cuenta {
+                justify-content: center;
+            }
+
+            .steps {
+                gap: 18px;
+            }
+
+            .cita-card {
+                padding: 22px;
+            }
+
+            .cita-card-top {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <a class="logo" href="{% url 'inicio' %}">
+        💈 Peluquería Capital
+    </a>
+
+    <nav aria-label="Navegación principal">
+        <ul class="nav">
+            <li>
+                <a href="{% url 'inicio' %}">Inicio</a>
+            </li>
+            <li>
+                <a href="{% url 'servicios' %}">Servicios</a>
+            </li>
+            <li>
+                <a href="{% url 'citas' %}"
+                   class="active"
+                   aria-current="page">Citas</a>
+            </li>
+            <li>
+                <a href="{% url 'contacto' %}">Contacto</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="cuenta">
+        <a class="btn-cuenta" href="{% url 'perfil' %}">
+            Mi perfil
+        </a>
+
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-cuenta">
+                Cerrar sesión
+            </button>
+        </form>
+    </div>
+
+</header>
+
+<main>
+
+    <section class="nosotros">
+        <div>
+            <p class="eyebrow">Quiénes somos</p>
+
+            <h1>
+                Tradición y <em>precisión</em> en cada corte
+            </h1>
+
+            <p class="descripcion">
+                Somos una barbería bogotana que nació de la pasión
+                por el oficio. Queremos que cada cliente salga
+                sintiéndose mejor que cuando llegó.
+            </p>
+
+            <p class="descripcion">
+                Elige tu servicio, tu barbero y el horario
+                que mejor se adapte a ti.
+            </p>
+        </div>
+
+        <div>
+            <h2>¿Por qué elegirnos?</h2>
+
+            <div class="razon">
+                <h3>✂️ Estilo y precisión</h3>
+                <p>
+                    Cortes clásicos y modernos según tus preferencias.
+                </p>
+            </div>
+
+            <div class="razon">
+                <h3>💆 Atención personalizada</h3>
+                <p>
+                    Cuéntanos qué buscas y déjanos cuidar tu estilo.
+                </p>
+            </div>
+
+            <div class="razon">
+                <h3>📅 Reserva tu espacio</h3>
+                <p>
+                    Consulta tus citas y administra tus reservas
+                    desde tu cuenta.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="citas-section" id="reservar">
+
+        <div class="citas-header">
+            <p class="eyebrow">Agenda tu visita</p>
+            <h2>Reserva tu <em>cita</em></h2>
+            <p>Selecciona el servicio, el barbero y tu horario.</p>
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <p class="step-text">Elige tu servicio y barbero</p>
+            </div>
+
+            <div class="step">
+                <div class="step-num">2</div>
+                <p class="step-text">Selecciona fecha y hora</p>
+            </div>
+
+            <div class="step">
+                <div class="step-num">3</div>
+                <p class="step-text">Reserva tu cita</p>
+            </div>
+        </div>
+
+        <div class="form-wrapper">
+
+            {% for message in messages %}
+                <div class="message {{ message.tags }}" role="status">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% if formulario.errors %}
+                <div class="error-box" role="alert">
+                    <p>Revisa los datos de tu reserva.</p>
+
+                    {% for error in formulario.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form class="form-grid"
+                  action="{% url 'citas' %}"
+                  method="post">
+
+                {% csrf_token %}
+
+                <div class="form-field">
+                    <label class="form-label" for="nombre">
+                        Nombre completo
+                    </label>
+
+                    <input class="form-input"
+                           id="nombre"
+                           type="text"
+                           value="{{ datos_perfil.nombre_completo|default:user.get_username }}"
+                           readonly>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label" for="telefono">
+                        Teléfono / WhatsApp
+                    </label>
+
+                    <input class="form-input"
+                           id="telefono"
+                           type="tel"
+                           value="{{ datos_perfil.telefono|default:'' }}"
+                           placeholder="Completa tu teléfono en Mi perfil"
+                           readonly>
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label"
+                           for="{{ formulario.servicio.id_for_label }}">
+                        Servicio / corte
+                    </label>
+
+                    {{ formulario.servicio }}
+
+                    {% for error in formulario.servicio.errors %}
+                        <p class="error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label"
+                           for="{{ formulario.barbero.id_for_label }}">
+                        Barbero
+                    </label>
+
+                    {{ formulario.barbero }}
+
+                    {% for error in formulario.barbero.errors %}
+                        <p class="error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label"
+                           for="{{ formulario.fecha.id_for_label }}">
+                        Fecha
+                    </label>
+
+                    {{ formulario.fecha }}
+
+                    {% for error in formulario.fecha.errors %}
+                        <p class="error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field">
+                    <label class="form-label"
+                           for="{{ formulario.hora.id_for_label }}">
+                        Hora
+                    </label>
+
+                    {{ formulario.hora }}
+
+                    {% for error in formulario.hora.errors %}
+                        <p class="error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <div class="form-field full">
+                    <label class="form-label"
+                           for="{{ formulario.notas.id_for_label }}">
+                        Notas adicionales
+                    </label>
+
+                    {{ formulario.notas }}
+
+                    {% for error in formulario.notas.errors %}
+                        <p class="error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+                <p class="form-nota full">
+                    Puedes actualizar tu nombre y teléfono en
+                    <a href="{% url 'perfil' %}">Mi perfil</a>.
+                </p>
+
+                <div class="form-submit">
+                    <p class="form-nota">
+                        Horarios de 08:00 a 18:00, en punto.
+                        Si el turno ya está ocupado, deberás
+                        seleccionar otro.
+                    </p>
+
+                    <button type="submit" class="btn-reservar">
+                        Reservar cita →
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+        <section class="mis-citas" id="mis-citas">
+
+            <div class="mis-citas-header">
+                <p class="eyebrow">Tu historial</p>
+                <h2>Mis <em>citas</em></h2>
+                <p>Aquí aparecen las reservas asociadas a tu cuenta.</p>
+            </div>
+
+            <div class="citas-grid">
+
+                {% for cita in mis_citas %}
+                    <article class="cita-card">
+
+                        <div class="cita-card-top">
+                            <span class="cita-numero">
+                                Cita #{{ cita.pk }}
+                            </span>
+
+                            <span class="estado estado-{{ cita.estado }}">
+                                {{ cita.get_estado_display }}
+                            </span>
+                        </div>
+
+                        <h3 class="cita-servicio">
+                            {{ cita.servicio.nombre }}
+                        </h3>
+
+                        <div class="cita-datos">
+                            <p>
+                                <strong>✂ Barbero:</strong>
+                                {{ cita.barbero.nombre }}
+                            </p>
+
+                            <p>
+                                <strong>📅 Fecha:</strong>
+                                {{ cita.fecha|date:"d/m/Y" }}
+                            </p>
+
+                            <p>
+                                <strong>🕐 Hora:</strong>
+                                {{ cita.hora|time:"H:i" }}
+                            </p>
+
+                            <p>
+                                <strong>Categoría:</strong>
+                                {{ cita.servicio.get_categoria_display }}
+                            </p>
+
+                            <p>
+                                <strong>Reservada el:</strong>
+                                {{ cita.fecha_asignacion|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+
+                        {% if cita.notas %}
+                            <div class="cita-notas">{{ cita.notas }}</div>
+                        {% endif %}
+
+                        {% if cita.estado == "pendiente" %}
+
+                            <details class="reprogramar">
+                                <summary>
+                                    Reprogramar o cambiar corte
+                                </summary>
+
+                                <form class="reprogramar-form"
+                                      action="{% url 'reprogramar_cita' cita.pk %}"
+                                      method="post">
+
+                                    {% csrf_token %}
+
+                                    <div class="form-field">
+                                        <label class="form-label"
+                                               for="servicio-{{ cita.pk }}">
+                                            Servicio / corte
+                                        </label>
+
+                                        <select id="servicio-{{ cita.pk }}"
+                                                name="servicio"
+                                                class="form-select"
+                                                required>
+
+                                            {% for servicio in formulario.fields.servicio.queryset %}
+                                                <option value="{{ servicio.pk }}"
+                                                        {% if servicio.pk == cita.servicio_id %}selected{% endif %}>
+                                                    {{ servicio.nombre }} — ${{ servicio.precio|floatformat:"0" }}
+                                                </option>
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+
+                                    <p class="form-nota">
+                                        Barbero: {{ cita.barbero.nombre }}
+                                    </p>
+
+                                    <div class="form-field">
+                                        <label class="form-label"
+                                               for="fecha-{{ cita.pk }}">
+                                            Nueva fecha
+                                        </label>
+
+                                        <input type="date"
+                                               id="fecha-{{ cita.pk }}"
+                                               name="fecha"
+                                               class="form-input"
+                                               value="{{ cita.fecha|date:'Y-m-d' }}"
+                                               min="{% now 'Y-m-d' %}"
+                                               required>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label class="form-label"
+                                               for="hora-{{ cita.pk }}">
+                                            Nueva hora
+                                        </label>
+
+                                        <select id="hora-{{ cita.pk }}"
+                                                name="hora"
+                                                class="form-select"
+                                                required>
+
+                                            {% for valor, etiqueta in formulario.fields.hora.widget.choices %}
+                                                <option value="{{ valor }}"
+                                                        {% if valor == cita.hora|time:"H:i" %}selected{% endif %}>
+                                                    {{ etiqueta }}
+                                                </option>
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+
+                                    <div class="form-field">
+                                        <label class="form-label"
+                                               for="notas-{{ cita.pk }}">
+                                            Notas
+                                        </label>
+
+                                        <textarea id="notas-{{ cita.pk }}"
+                                                  name="notas"
+                                                  class="form-textarea"
+                                                  maxlength="1000">{{ cita.notas }}</textarea>
+                                    </div>
+
+                                    <button type="submit"
+                                            class="btn-reservar">
+                                        Guardar cambios
+                                    </button>
+
+                                </form>
+
+                            </details>
+
+                            <form action="{% url 'cancelar_cita' cita.pk %}"
+                                  method="post"
+                                  onsubmit="return confirm('¿Quieres cancelar esta cita?');">
+
+                                {% csrf_token %}
+
+                                <button type="submit"
+                                        class="btn-cancelar-cita">
+                                    Cancelar cita
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </article>
+
+                {% empty %}
+                    <div class="sin-citas">
+                        <h3>📅 Todavía no tienes citas</h3>
+                        <p>
+                            Reserva tu primera cita con el formulario
+                            de arriba y aparecerá aquí.
+                        </p>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <strong>Peluquería Capital</strong>
+    · Bogotá, Colombia ·
+    © {% now "Y" %}
+</footer>
+
+</body>
+</html>
