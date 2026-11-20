@@ -147,3 +147,94 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class Pedido(models.Model):
+    class Estado(models.TextChoices):
+        REGISTRADO = "registrado", "Registrado"
+
+    clave_confirmacion = models.CharField(
+        max_length=64,
+        unique=True,
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    cliente = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="pedidos",
+    )
+    fecha = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        default=0,
+    )
+    estado = models.CharField(
+        max_length=15,
+        choices=Estado.choices,
+        default=Estado.REGISTRADO,
+    )
+
+    class Meta:
+        ordering = ["-fecha", "-pk"]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(total__gte=0),
+                name="pedido_total_no_negativo",
+            ),
+        ]
+
+    def __str__(self):
+        return f"Pedido #{self.pk} - {self.cliente}"
+
+
+class DetallePedido(models.Model):
+    pedido = models.ForeignKey(
+        Pedido,
+        on_delete=models.CASCADE,
+        related_name="detalles",
+    )
+    producto = models.ForeignKey(
+        Producto,
+        on_delete=models.PROTECT,
+        related_name="detalles_pedido",
+    )
+    nombre_producto = models.CharField(max_length=150)
+    cantidad = models.PositiveIntegerField()
+    precio_unitario = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+    subtotal = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+    )
+
+    class Meta:
+        ordering = ["pk"]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(cantidad__gt=0),
+                name="detalle_cantidad_positiva",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(precio_unitario__gte=0),
+                name="detalle_precio_no_negativo",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(subtotal__gte=0),
+                name="detalle_subtotal_no_negativo",
+            ),
+            models.UniqueConstraint(
+                fields=["pedido", "producto"],
+                name="detalle_producto_unico_por_pedido",
+            ),
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.nombre_producto} x{self.cantidad} "
+            f"- Pedido #{self.pedido_id}"
+        )

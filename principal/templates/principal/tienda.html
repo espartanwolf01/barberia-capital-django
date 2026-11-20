@@ -442,6 +442,9 @@
         </nav>
 
         <div class="header-actions">
+            <a href="{% url 'carrito' %}" class="btn-cuenta">
+    🛒 Carrito
+</a>
             {% if user.is_authenticated %}
                 <a href="{% url 'perfil' %}" class="btn-cuenta">
                     Mi perfil
@@ -618,6 +621,26 @@
                href="https://wa.me/573246083901?text={{ producto.nombre|urlencode }}">
                 Consultar este producto por WhatsApp
             </a>
+            {% if user.is_authenticated %}
+    <form action="{% url 'agregar_carrito' producto.pk %}"
+          method="post"
+          style="margin-top: 15px;">
+
+        {% csrf_token %}
+
+        <input type="hidden" name="cantidad" value="1">
+
+        <button type="submit"
+                class="btn-ver"
+                style="width: 100%;">
+            🛒 Agregar al carrito
+        </button>
+    </form>
+{% else %}
+    <a href="{% url 'login' %}" class="whatsapp">
+        Inicia sesión para agregar al carrito
+    </a>
+{% endif %}
         {% else %}
             <p class="stock agotado">
                 Este producto está agotado.
