@@ -111,3 +111,39 @@ class Cita(models.Model):
             f"{self.cliente} - {self.servicio} "
             f"- {self.fecha} {self.hora}"
         )
+
+
+class Producto(models.Model):
+    class Categoria(models.TextChoices):
+        MAQUINAS = "maquinas", "Máquinas"
+        PRODUCTOS = "productos", "Productos"
+        ACCESORIOS = "accesorios", "Accesorios"
+
+    nombre = models.CharField(max_length=150)
+    descripcion = models.TextField(max_length=2000)
+    categoria = models.CharField(
+        max_length=15,
+        choices=Categoria.choices,
+    )
+    precio = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+    )
+    stock = models.PositiveIntegerField(default=0)
+    imagen = models.ImageField(
+        upload_to="productos/",
+        blank=True,
+    )
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["categoria", "nombre"]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(precio__gte=0),
+                name="producto_precio_no_negativo",
+            ),
+        ]
+
+    def __str__(self):
+        return self.nombre

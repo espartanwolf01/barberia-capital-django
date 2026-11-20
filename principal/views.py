@@ -17,8 +17,7 @@ from django.views.decorators.http import (
 )
 
 from .forms import CitaForm, EditarPerfilForm, RegistroForm
-from .models import Barbero, Cita, Perfil, Servicio
-
+from .models import Barbero, Cita, Perfil, Producto, Servicio
 Usuario = get_user_model()
 
 
@@ -390,3 +389,13 @@ def cambiar_estado_cita(request, cita_id):
         )
 
     return redirect("panel")
+
+@require_GET
+def tienda(request):
+    productos = Producto.objects.filter(activo=True)
+
+    return render(
+        request,
+        "principal/tienda.html",
+        {"productos": productos},
+    )

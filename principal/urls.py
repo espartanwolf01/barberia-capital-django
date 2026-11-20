@@ -27,4 +27,5 @@ urlpatterns = [
         views.cambiar_estado_cita,
         name="cambiar_estado_cita",
     ),
+        path("tienda", views.tienda, name="tienda"),
 ]
