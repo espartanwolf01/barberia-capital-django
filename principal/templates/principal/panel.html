@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel Administrativo | Peluquería Capital</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E4C97E;
+            --dark: #0E0C0A;
+            --dark-2: #181410;
+            --text: #EDE8DF;
+            --muted: #ADA193;
+            --danger: #ED9696;
+            --success: #91CBA1;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        header {
+            min-height: 76px;
+            background: rgba(14, 12, 10, .97);
+            border-bottom: 1px solid rgba(201, 168, 76, .25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 5%;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            font-weight: 700;
+            color: var(--gold-light);
+            text-decoration: none;
+        }
+
+        .admin-title {
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .header-right,
+        .acciones,
+        .accesos {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .user-name {
+            color: var(--gold-light);
+            font-size: 13px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid rgba(201, 168, 76, .4);
+            color: var(--gold-light);
+            padding: 10px 16px;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 45px 0 70px;
+        }
+
+        .page-title {
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+            font-size: 38px;
+            color: var(--gold-light);
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card,
+        .section {
+            background: var(--dark-2);
+            border: 1px solid rgba(201, 168, 76, .16);
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            color: var(--gold-light);
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            margin-bottom: 22px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+        }
+
+        .section-description {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        caption {
+            text-align: left;
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        th {
+            text-align: left;
+            padding: 13px;
+            color: var(--gold);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            border-bottom: 1px solid rgba(201, 168, 76, .2);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 13px;
+            color: #D8D0C5;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            vertical-align: middle;
+        }
+
+        tbody tr:hover td {
+            background: rgba(201, 168, 76, .03);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .pendiente {
+            background: rgba(201, 168, 76, .14);
+            color: var(--gold-light);
+        }
+
+        .atendida,
+        .activo {
+            background: rgba(79, 157, 105, .14);
+            color: var(--success);
+        }
+
+        .cancelada,
+        .inactivo {
+            background: rgba(185, 74, 72, .14);
+            color: var(--danger);
+        }
+
+        .acciones {
+            min-width: 180px;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 8px 11px;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .btn-atendida {
+            background: rgba(79, 157, 105, .16);
+            color: var(--success);
+            border: 1px solid rgba(79, 157, 105, .4);
+        }
+
+        .btn-atendida:hover {
+            background: rgba(79, 157, 105, .3);
+        }
+
+        .btn-cancelar {
+            background: rgba(185, 74, 72, .16);
+            color: var(--danger);
+            border: 1px solid rgba(185, 74, 72, .4);
+        }
+
+        .btn-cancelar:hover {
+            background: rgba(185, 74, 72, .3);
+        }
+
+        .empty-message,
+        .sin-acciones {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .empty-message {
+            padding: 25px 13px;
+        }
+
+        .message {
+            padding: 15px 18px;
+            margin-bottom: 25px;
+            background: rgba(79, 157, 105, .1);
+            border: 1px solid rgba(79, 157, 105, .3);
+            border-radius: 7px;
+            color: var(--success);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .message.error {
+            color: var(--danger);
+            background: rgba(185, 74, 72, .1);
+            border-color: rgba(185, 74, 72, .4);
+        }
+
+        .resumen {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .resumen p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .resumen strong {
+            font-size: 25px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .numero-pendiente {
+            color: var(--gold-light);
+        }
+
+        .numero-atendida {
+            color: var(--success);
+        }
+
+        .numero-cancelada {
+            color: var(--danger);
+        }
+
+        .accesos {
+            margin-top: 18px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0 20px 35px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--gold-light);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            header {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: 94%;
+                padding-top: 30px;
+            }
+
+            .page-title {
+                font-size: 30px;
+            }
+
+            .section {
+                padding: 20px 15px;
+            }
+
+            .header-right {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stats,
+            .resumen {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <a href="{% url 'inicio' %}" class="logo">
+            💈 Peluquería Capital
+        </a>
+
+        <p class="admin-title">Panel administrativo</p>
+    </div>
+
+    <div class="header-right">
+        <span class="user-name">
+            {{ user.perfil.nombre_completo|default:user.get_username }}
+        </span>
+
+        <a href="{% url 'inicio' %}" class="btn">
+            Ver sitio
+        </a>
+
+        <a href="{% url 'admin:index' %}" class="btn">
+            Gestión de datos
+        </a>
+
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn">
+                Cerrar sesión
+            </button>
+        </form>
+    </div>
+</header>
+
+<main class="container">
+
+    <h1 class="page-title">Panel de administración</h1>
+
+    <p class="page-subtitle">
+        Consulta los usuarios y administra las citas de Peluquería Capital.
+    </p>
+
+    {% for message in messages %}
+        <div class="message {{ message.tags }}" role="status">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <section class="stats" aria-label="Estadísticas generales">
+
+        <div class="stat-card">
+            <p class="stat-label">Usuarios registrados</p>
+            <p class="stat-number">{{ total_usuarios }}</p>
+        </div>
+
+        <div class="stat-card">
+            <p class="stat-label">Usuarios activos</p>
+            <p class="stat-number">{{ usuarios_activos }}</p>
+        </div>
+
+        <div class="stat-card">
+            <p class="stat-label">Servicios registrados</p>
+            <p class="stat-number">{{ total_servicios }}</p>
+        </div>
+
+        <div class="stat-card">
+            <p class="stat-label">Barberos registrados</p>
+            <p class="stat-number">{{ total_barberos }}</p>
+        </div>
+
+    </section>
+
+    <section class="section" aria-labelledby="resumen-titulo">
+
+        <div class="section-header">
+            <h2 class="section-title" id="resumen-titulo">
+                Estado de las citas
+            </h2>
+
+            <p class="section-description">
+                Resumen actual de las reservas.
+            </p>
+        </div>
+
+        <div class="resumen">
+            <div>
+                <p>Pendientes</p>
+                <strong class="numero-pendiente">
+                    {{ citas_pendientes }}
+                </strong>
+            </div>
+
+            <div>
+                <p>Atendidas</p>
+                <strong class="numero-atendida">
+                    {{ citas_atendidas }}
+                </strong>
+            </div>
+
+            <div>
+                <p>Canceladas</p>
+                <strong class="numero-cancelada">
+                    {{ citas_canceladas }}
+                </strong>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="section" aria-labelledby="citas-titulo">
+
+        <div class="section-header">
+            <h2 class="section-title" id="citas-titulo">Citas</h2>
+
+            <p class="section-description">
+                Puedes marcar las citas pendientes como atendidas o canceladas.
+            </p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <caption>Reservas de todos los clientes</caption>
+
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Servicio</th>
+                        <th scope="col">Barbero</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for cita in citas %}
+                        <tr>
+                            <td>#{{ cita.pk }}</td>
+
+                            <td>
+                                {{ cita.cliente.perfil.nombre_completo|default:cita.cliente.get_username }}
+                            </td>
+
+                            <td>{{ cita.servicio.nombre }}</td>
+                            <td>{{ cita.barbero.nombre }}</td>
+                            <td>{{ cita.fecha|date:"d/m/Y" }}</td>
+                            <td>{{ cita.hora|time:"H:i" }}</td>
+
+                            <td>
+                                <span class="status {{ cita.estado }}">
+                                    {{ cita.get_estado_display }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {% if cita.estado == "pendiente" %}
+                                    <div class="acciones">
+
+                                        <form action="{% url 'cambiar_estado_cita' cita.pk %}"
+                                              method="post">
+
+                                            {% csrf_token %}
+
+                                            <input type="hidden"
+                                                   name="estado"
+                                                   value="atendida">
+
+                                            <button type="submit"
+                                                    class="btn-action btn-atendida"
+                                                    aria-label="Marcar cita {{ cita.pk }} como atendida">
+                                                Atendida
+                                            </button>
+                                        </form>
+
+                                        <form action="{% url 'cambiar_estado_cita' cita.pk %}"
+                                              method="post"
+                                              onsubmit="return confirm('¿Quieres cancelar esta cita?');">
+
+                                            {% csrf_token %}
+
+                                            <input type="hidden"
+                                                   name="estado"
+                                                   value="cancelada">
+
+                                            <button type="submit"
+                                                    class="btn-action btn-cancelar"
+                                                    aria-label="Cancelar cita {{ cita.pk }}">
+                                                Cancelar
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                {% else %}
+                                    <span class="sin-acciones">
+                                        Sin acciones pendientes
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="empty-message">
+                                No hay citas registradas.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section class="section" aria-labelledby="usuarios-titulo">
+
+        <div class="section-header">
+            <h2 class="section-title" id="usuarios-titulo">
+                Usuarios
+            </h2>
+
+            <p class="section-description">
+                Cuentas registradas en el sistema.
+            </p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <caption>Información de las cuentas</caption>
+
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Teléfono</th>
+                        <th scope="col">Acceso administrativo</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario.pk }}</td>
+
+                            <td>
+                                {{ usuario.perfil.nombre_completo|default:usuario.get_username }}
+                            </td>
+
+                            <td>
+                                {{ usuario.email|default:"Sin registrar" }}
+                            </td>
+
+                            <td>
+                                {{ usuario.perfil.telefono|default:"Sin registrar" }}
+                            </td>
+
+                            <td>
+                                {% if usuario.is_staff %}
+                                    Sí
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if usuario.is_active %}
+                                    <span class="status activo">
+                                        Activo
+                                    </span>
+                                {% else %}
+                                    <span class="status inactivo">
+                                        Inactivo
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="empty-message">
+                                No hay usuarios registrados.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section class="section" aria-labelledby="gestion-titulo">
+
+        <div class="section-header">
+            <h2 class="section-title" id="gestion-titulo">
+                Servicios y barberos
+            </h2>
+
+            <p class="section-description">
+                Agrega o actualiza los servicios y el equipo de la barbería.
+            </p>
+        </div>
+
+        <div class="accesos">
+            <a href="{% url 'admin:principal_servicio_changelist' %}"
+               class="btn">
+                Gestionar servicios
+            </a>
+
+            <a href="{% url 'admin:principal_barbero_changelist' %}"
+               class="btn">
+                Gestionar barberos
+            </a>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    © {% now "Y" %} Peluquería Capital · Bogotá
+</footer>
+
+</body>
+</html>

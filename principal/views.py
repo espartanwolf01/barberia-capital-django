@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import (
     authenticate,
     get_user_model,
@@ -7,14 +8,16 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
+from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import (
+    require_GET,
     require_http_methods,
     require_POST,
 )
 
 from .forms import CitaForm, EditarPerfilForm, RegistroForm
-from .models import Cita, Perfil
+from .models import Barbero, Cita, Perfil, Servicio
 
 Usuario = get_user_model()
 
@@ -290,3 +293,100 @@ def reprogramar_cita(request, cita_id):
             )
 
     return redirect("citas")
+
+
+@staff_member_required(login_url="admin:login")
+@require_GET
+def panel(request):
+    resumen_usuarios = Usuario.objects.aggregate(
+        total=Count("pk"),
+        activos=Count(
+            "pk",
+            filter=Q(is_active=True),
+        ),
+    )
+
+    resumen_citas = Cita.objects.aggregate(
+        pendientes=Count(
+            "pk",
+            filter=Q(estado=Cita.Estado.PENDIENTE),
+        ),
+        atendidas=Count(
+            "pk",
+            filter=Q(estado=Cita.Estado.ATENDIDA),
+        ),
+        canceladas=Count(
+            "pk",
+            filter=Q(estado=Cita.Estado.CANCELADA),
+        ),
+    )
+
+    todas_las_citas = Cita.objects.select_related(
+        "cliente",
+        "cliente__perfil",
+        "servicio",
+        "barbero",
+    )
+
+    usuarios = Usuario.objects.select_related(
+        "perfil"
+    ).order_by("-date_joined")
+
+    return render(
+        request,
+        "principal/panel.html",
+        {
+            "total_usuarios": resumen_usuarios["total"],
+            "usuarios_activos": resumen_usuarios["activos"],
+            "citas_pendientes": resumen_citas["pendientes"],
+            "citas_atendidas": resumen_citas["atendidas"],
+            "citas_canceladas": resumen_citas["canceladas"],
+            "total_servicios": Servicio.objects.count(),
+            "total_barberos": Barbero.objects.count(),
+            "citas": todas_las_citas,
+            "usuarios": usuarios,
+        },
+    )
+
+
+@staff_member_required(login_url="admin:login")
+@require_POST
+def cambiar_estado_cita(request, cita_id):
+    cita = get_object_or_404(Cita, pk=cita_id)
+
+    nuevo_estado = request.POST.get("estado", "")
+
+    estados_permitidos = [
+        Cita.Estado.ATENDIDA,
+        Cita.Estado.CANCELADA,
+    ]
+
+    if nuevo_estado not in estados_permitidos:
+        messages.error(
+            request,
+            "Selecciona un estado válido.",
+        )
+
+        return redirect("panel")
+
+    actualizadas = Cita.objects.filter(
+        pk=cita.pk,
+        estado=Cita.Estado.PENDIENTE,
+    ).update(
+        estado=nuevo_estado,
+    )
+
+    if actualizadas:
+        etiqueta = Cita.Estado(nuevo_estado).label
+
+        messages.success(
+            request,
+            f"La cita #{cita.pk} se marcó como {etiqueta.lower()}.",
+        )
+    else:
+        messages.error(
+            request,
+            "La cita ya no está pendiente. Recarga el panel.",
+        )
+
+    return redirect("panel")
