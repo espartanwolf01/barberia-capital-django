@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import (
@@ -8,7 +10,7 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
-from django.db.models import Count, Q
+from django.db.models import Count, F, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import (
     require_GET,
@@ -17,7 +19,8 @@ from django.views.decorators.http import (
 )
 
 from .forms import CitaForm, EditarPerfilForm, RegistroForm
-from .models import Barbero, Cita, Perfil, Producto, Servicio
+from .models import Barbero, Cita, Pedido, Perfil, Producto, Servicio
+
 Usuario = get_user_model()
 
 
@@ -320,6 +323,30 @@ def panel(request):
         ),
     )
 
+    resumen_productos = Producto.objects.aggregate(
+        total=Count("pk"),
+        agotados=Count(
+            "pk",
+            filter=Q(activo=True, stock=0),
+        ),
+        stock_bajo=Count(
+            "pk",
+            filter=Q(
+                activo=True,
+                stock__gt=0,
+                stock__lte=3,
+            ),
+        ),
+    )
+
+    resumen_pedidos = Pedido.objects.aggregate(
+        cantidad=Count("pk"),
+        importe=Sum(
+            "total",
+            default=Decimal("0.00"),
+        ),
+    )
+
     todas_las_citas = Cita.objects.select_related(
         "cliente",
         "cliente__perfil",
@@ -330,6 +357,17 @@ def panel(request):
     usuarios = Usuario.objects.select_related(
         "perfil"
     ).order_by("-date_joined")
+
+    productos = Producto.objects.all()
+
+    pedidos = (
+        Pedido.objects.select_related(
+            "cliente",
+            "cliente__perfil",
+        )
+        .prefetch_related("detalles")
+        .order_by("-fecha", "-pk")
+    )
 
     return render(
         request,
@@ -342,8 +380,15 @@ def panel(request):
             "citas_canceladas": resumen_citas["canceladas"],
             "total_servicios": Servicio.objects.count(),
             "total_barberos": Barbero.objects.count(),
+            "total_productos": resumen_productos["total"],
+            "productos_agotados": resumen_productos["agotados"],
+            "productos_stock_bajo": resumen_productos["stock_bajo"],
+            "total_pedidos": resumen_pedidos["cantidad"],
+            "importe_pedidos": resumen_pedidos["importe"],
             "citas": todas_las_citas,
             "usuarios": usuarios,
+            "productos": productos,
+            "pedidos": pedidos,
         },
     )
 
@@ -389,6 +434,58 @@ def cambiar_estado_cita(request, cita_id):
         )
 
     return redirect("panel")
+
+
+@staff_member_required(login_url="admin:login")
+@require_POST
+def reponer_stock(request, producto_id):
+    producto = get_object_or_404(
+        Producto,
+        pk=producto_id,
+    )
+
+    valor = request.POST.get("cantidad", "").strip()
+
+    if (
+        not valor.isascii()
+        or not valor.isdigit()
+        or len(valor) > 9
+    ):
+        messages.error(
+            request,
+            "Escribe una cantidad entera positiva.",
+        )
+        return redirect("panel")
+
+    cantidad = int(valor)
+
+    if cantidad < 1:
+        messages.error(
+            request,
+            "La cantidad debe ser mayor que cero.",
+        )
+        return redirect("panel")
+
+    actualizados = Producto.objects.filter(
+        pk=producto.pk,
+        stock__lte=2147483647 - cantidad,
+    ).update(
+        stock=F("stock") + cantidad,
+    )
+
+    if actualizados:
+        messages.success(
+            request,
+            f"Se agregaron {cantidad} unidades a {producto.nombre}.",
+        )
+    else:
+        messages.error(
+            request,
+            "La cantidad supera el límite de stock permitido.",
+        )
+
+    return redirect("panel")
+
 
 @require_GET
 def tienda(request):

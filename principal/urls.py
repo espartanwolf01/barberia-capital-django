@@ -12,6 +12,7 @@ urlpatterns = [
     path("perfil", views.perfil, name="perfil"),
     path("tienda", views.tienda, name="tienda"),
     path("citas", views.citas, name="citas"),
+
     path(
         "citas/<int:cita_id>/cancelar",
         views.cancelar_cita,
@@ -22,12 +23,19 @@ urlpatterns = [
         views.reprogramar_cita,
         name="reprogramar_cita",
     ),
+
     path("panel", views.panel, name="panel"),
     path(
         "panel/citas/<int:cita_id>/estado",
         views.cambiar_estado_cita,
         name="cambiar_estado_cita",
     ),
+    path(
+        "panel/productos/<int:producto_id>/reponer",
+        views.reponer_stock,
+        name="reponer_stock",
+    ),
+
     path(
         "carrito",
         carrito.ver_carrito,
