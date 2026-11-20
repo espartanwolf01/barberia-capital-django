@@ -703,7 +703,7 @@
     {% if user.is_authenticated %}
 
         {% if user.is_staff %}
-            <a class="btn-admin" href="/admin/">
+            <a class="btn-admin"href="{% url 'panel' %}">
                 Panel Admin
             </a>
         {% endif %}
