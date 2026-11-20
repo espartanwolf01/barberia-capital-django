@@ -461,6 +461,9 @@
     </div>
 
     <div class="header-right">
+        <a href="{% url 'reportes' %}" class="btn">
+    📊 Reportes
+</a>
         <span class="user-name">
             {{ user.perfil.nombre_completo|default:user.get_username }}
         </span>
