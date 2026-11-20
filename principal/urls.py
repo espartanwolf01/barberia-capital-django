@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import carrito, views
+from . import carrito, reportes, views
 
 urlpatterns = [
     path("", views.inicio, name="inicio"),
@@ -36,11 +36,7 @@ urlpatterns = [
         name="reponer_stock",
     ),
 
-    path(
-        "carrito",
-        carrito.ver_carrito,
-        name="carrito",
-    ),
+    path("carrito", carrito.ver_carrito, name="carrito"),
     path(
         "carrito/<int:producto_id>/agregar",
         carrito.agregar_carrito,
@@ -65,5 +61,21 @@ urlpatterns = [
         "pedidos/<int:pedido_id>/confirmacion",
         carrito.compra_exitosa,
         name="compra_exitosa",
+    ),
+
+    path(
+        "reportes",
+        reportes.ver_reportes,
+        name="reportes",
+    ),
+    path(
+        "reportes/exportar",
+        reportes.exportar_reportes,
+        name="exportar_reportes",
+    ),
+    path(
+        "reportes/general",
+        reportes.exportar_general,
+        name="exportar_general",
     ),
 ]

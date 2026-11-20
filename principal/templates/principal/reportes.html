@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reportes | Peluquería Capital</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #E4C97E;
+            --dark: #0E0C0A;
+            --panel: #181410;
+            --field: #221E18;
+            --text: #EDE8DF;
+            --muted: #ADA193;
+            --border: rgba(201, 168, 76, .22);
+            --green: #91CBA1;
+            --red: #ED9696;
+        }
+
+        body {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(201, 168, 76, .07),
+                    transparent 35%
+                ),
+                var(--dark);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 22px 5%;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+            background: var(--dark);
+        }
+
+        .logo {
+            color: var(--gold-light);
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: 45px auto 70px;
+        }
+
+        .eyebrow {
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-light);
+            font-size: clamp(32px, 5vw, 46px);
+            margin-bottom: 15px;
+        }
+
+        .introduccion {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+            max-width: 760px;
+        }
+
+        .actualizado {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+
+        .panel,
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 25px;
+        }
+
+        .panel {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: var(--gold-light);
+            font-family: 'Playfair Display', serif;
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .ayuda {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .filtros {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 24px;
+        }
+
+        .campo {
+            min-width: 0;
+        }
+
+        .campo label {
+            display: block;
+            color: var(--gold-light);
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .campo input,
+        .campo select {
+            width: 100%;
+            min-width: 0;
+            padding: 12px;
+            color: var(--text);
+            background: var(--field);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 13px;
+            color-scheme: dark;
+        }
+
+        .campo input:focus,
+        .campo select:focus {
+            outline: 2px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        .acciones {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .filtros .acciones {
+            grid-column: 1 / -1;
+            margin-top: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border: 1px solid var(--gold);
+            border-radius: 5px;
+            background: transparent;
+            color: var(--gold-light);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn:hover {
+            background: rgba(201, 168, 76, .12);
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+        }
+
+        .btn-excel {
+            color: var(--green);
+            border-color: rgba(145, 203, 161, .6);
+        }
+
+        .btn-excel:hover {
+            background: rgba(145, 203, 161, .1);
+        }
+
+        .error {
+            color: var(--red);
+            font-size: 12px;
+            line-height: 1.7;
+            margin-top: 8px;
+        }
+
+        .error-general {
+            padding: 15px;
+            margin-top: 18px;
+            border: 1px solid rgba(237, 150, 150, .4);
+            background: rgba(237, 150, 150, .07);
+            border-radius: 5px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+
+        .numero {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .etiqueta {
+            display: inline-block;
+            padding: 5px 9px;
+            background: rgba(201, 168, 76, .1);
+            color: var(--gold-light);
+            font-size: 10px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+        }
+
+        .tabla-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        .tabla-scroll {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        caption {
+            text-align: left;
+            color: var(--muted);
+            font-size: 12px;
+            padding-bottom: 16px;
+        }
+
+        th,
+        td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        th {
+            color: var(--gold-light);
+            font-size: 11px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+            background: rgba(201, 168, 76, .03);
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .pendiente {
+            background: rgba(201, 168, 76, .12);
+            color: var(--gold-light);
+        }
+
+        .atendida {
+            background: rgba(145, 203, 161, .1);
+            color: var(--green);
+        }
+
+        .cancelada {
+            background: rgba(237, 150, 150, .1);
+            color: var(--red);
+        }
+
+        .vacio {
+            color: var(--muted);
+            padding: 35px 12px;
+            text-align: center;
+        }
+
+        .general {
+            border-color: rgba(145, 203, 161, .3);
+        }
+
+        .hojas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .hojas span {
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        footer {
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 12px;
+            padding: 25px;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--gold-light);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 1000px) {
+            .filtros {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 750px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                width: 94%;
+                margin-top: 30px;
+            }
+
+            .panel,
+            .card {
+                padding: 20px 15px;
+            }
+
+            .filtros {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="{% url 'inicio' %}" class="logo">
+        💈 Peluquería Capital
+    </a>
+
+    <a href="{% url 'panel' %}" class="btn">
+        ← Volver al panel
+    </a>
+</header>
+
+<main class="container">
+
+    <p class="eyebrow">Administración · Reportes</p>
+
+    <h1>La información de tu negocio</h1>
+
+    <p class="introduccion">
+        Consulta las citas por fechas, estado, barbero o servicio.
+        Descarga los resultados en Excel o genera un reporte general
+        con todos los registros.
+    </p>
+
+    <p class="actualizado">
+        Consulta realizada:
+        {{ generado|date:"d/m/Y H:i" }} · Hora de Bogotá.
+        Recarga la página para consultar nuevos cambios.
+    </p>
+
+    <section class="panel" aria-labelledby="filtros-titulo">
+
+        <h2 id="filtros-titulo">Filtrar citas</h2>
+
+        <p class="ayuda">
+            Las fechas corresponden al día de la cita e incluyen
+            ambos extremos. Deja los campos vacíos para consultar todo.
+        </p>
+
+        {% if formulario.errors %}
+            <div class="error-general" role="alert">
+                <p class="error">Revisa los filtros seleccionados.</p>
+
+                {% for error in formulario.non_field_errors %}
+                    <p class="error">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form action="{% url 'reportes' %}"
+              method="get"
+              class="filtros">
+
+            {% for campo in formulario %}
+                <div class="campo">
+                    <label for="{{ campo.id_for_label }}">
+                        {{ campo.label }}
+                    </label>
+
+                    {{ campo }}
+
+                    {% for error in campo.errors %}
+                        <p class="error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="acciones">
+                <button type="submit" class="btn btn-primary">
+                    Aplicar filtros
+                </button>
+
+                <a href="{% url 'reportes' %}" class="btn">
+                    Limpiar filtros
+                </a>
+            </div>
+
+        </form>
+
+    </section>
+
+    <div class="cards">
+
+        <section class="card" aria-labelledby="usuarios-titulo">
+            <span class="etiqueta">Datos generales actuales</span>
+
+            <h2 id="usuarios-titulo">Usuarios</h2>
+
+            <p>
+                Registrados:
+                <span class="numero">
+                    {{ resumen_usuarios.cantidad }}
+                </span>
+            </p>
+
+            <p>
+                Activos:
+                <span class="numero">
+                    {{ resumen_usuarios.activos }}
+                </span>
+            </p>
+        </section>
+
+        <section class="card" aria-labelledby="inventario-titulo">
+            <span class="etiqueta">Datos generales actuales</span>
+
+            <h2 id="inventario-titulo">Inventario</h2>
+
+            <p>
+                Productos registrados:
+                <span class="numero">
+                    {{ resumen_productos.cantidad }}
+                </span>
+            </p>
+
+            <p>
+                Activos agotados:
+                <span class="numero">
+                    {{ resumen_productos.agotados }}
+                </span>
+            </p>
+
+            <p>
+                Activos con stock bajo:
+                <span class="numero">
+                    {{ resumen_productos.stock_bajo }}
+                </span>
+            </p>
+        </section>
+
+        <section class="card" aria-labelledby="citas-titulo">
+            <span class="etiqueta">Según los filtros aplicados</span>
+
+            <h2 id="citas-titulo">Citas</h2>
+
+            <p>
+                Total:
+                <span class="numero">
+                    {{ resumen_citas.cantidad }}
+                </span>
+            </p>
+
+            <p>
+                Pendientes:
+                <span class="numero">
+                    {{ resumen_citas.pendientes }}
+                </span>
+            </p>
+
+            <p>
+                Atendidas:
+                <span class="numero">
+                    {{ resumen_citas.atendidas }}
+                </span>
+            </p>
+
+            <p>
+                Canceladas:
+                <span class="numero">
+                    {{ resumen_citas.canceladas }}
+                </span>
+            </p>
+        </section>
+
+    </div>
+
+    <section class="panel" aria-labelledby="resultados-titulo">
+
+        <div class="tabla-header">
+            <div>
+                <h2 id="resultados-titulo">Resultado de la consulta</h2>
+
+                <p class="ayuda">
+                    El Excel de citas utiliza los filtros que aplicaste.
+                </p>
+            </div>
+
+            {% if not formulario.errors %}
+                <a href="{% url 'exportar_reportes' %}?{{ filtros_query }}"
+                   class="btn btn-excel">
+                    Descargar Excel de citas
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="tabla-scroll">
+            <table>
+                <caption>
+                    {{ resumen_citas.cantidad }} citas encontradas
+                </caption>
+
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Servicio</th>
+                        <th scope="col">Barbero</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for cita in citas %}
+                        <tr>
+                            <td>#{{ cita.pk }}</td>
+
+                            <td>
+                                {{ cita.cliente.perfil.nombre_completo|default:cita.cliente.get_username }}
+                            </td>
+
+                            <td>{{ cita.servicio.nombre }}</td>
+                            <td>{{ cita.barbero.nombre }}</td>
+                            <td>{{ cita.fecha|date:"d/m/Y" }}</td>
+                            <td>{{ cita.hora|time:"H:i" }}</td>
+
+                            <td>
+                                <span class="estado {{ cita.estado }}">
+                                    {{ cita.get_estado_display }}
+                                </span>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="vacio">
+                                {% if formulario.errors %}
+                                    Corrige los filtros para consultar las citas.
+                                {% else %}
+                                    No se encontraron citas con esos filtros.
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <section class="panel general" aria-labelledby="general-titulo">
+
+        <h2 id="general-titulo">Descarga general del sistema</h2>
+
+        <p class="ayuda">
+            Descarga todos los registros, sin aplicar los filtros de arriba.
+            El archivo consulta los datos al momento de descargarlo.
+            Los productos muestran el stock actual y los pedidos conservan
+            los precios registrados al comprar.
+        </p>
+
+        <div class="hojas" aria-label="Hojas del archivo Excel">
+            <span>Citas</span>
+            <span>Pedidos</span>
+            <span>Detalles de pedidos</span>
+            <span>Productos</span>
+            <span>Usuarios</span>
+        </div>
+
+        <div class="acciones">
+            <a href="{% url 'exportar_general' %}"
+               class="btn btn-excel">
+                Descargar todo en Excel
+            </a>
+        </div>
+
+        <p class="ayuda" style="margin-top: 18px;">
+            No incluye contraseñas.
+            Los importes de pedidos no acreditan pagos recibidos.
+        </p>
+
+    </section>
+
+</main>
+
+<footer>
+    © {% now "Y" %} Peluquería Capital · Bogotá
+</footer>
+
+</body>
+</html>
