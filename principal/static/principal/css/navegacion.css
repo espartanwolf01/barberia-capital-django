@@ -1,0 +1,214 @@
+.capital-header,
+.capital-header * {
+    box-sizing: border-box;
+}
+
+.capital-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 22px;
+    width: 100%;
+    height: auto;
+    min-height: 86px;
+    margin: 0;
+    padding: 20px 4%;
+    background: rgba(14, 12, 10, .97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, .23);
+    color: #EDE8DF;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.capital-header .capital-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    color: #C9A84C;
+    font-family: 'Playfair Display', serif;
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-decoration: none;
+    text-transform: none;
+}
+
+.capital-header .capital-nav {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 26px;
+    width: auto;
+    margin: 0;
+    padding: 6px 0;
+    background: transparent;
+    border: 0;
+}
+
+.capital-header .capital-nav a {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 5px 0;
+    color: #ADA193;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 1.4px;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color .2s;
+}
+
+.capital-header .capital-nav a::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: #C9A84C;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .2s;
+}
+
+.capital-header .capital-nav a:hover,
+.capital-header .capital-nav a[aria-current="page"] {
+    color: #E4C97E;
+}
+
+.capital-header .capital-nav a:hover::after,
+.capital-header .capital-nav a[aria-current="page"]::after {
+    transform: scaleX(1);
+}
+
+.capital-header .capital-cuenta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+.capital-header .capital-cuenta form {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.capital-header .capital-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 40px;
+    margin: 0;
+    padding: 9px 14px;
+    border: 1px solid rgba(201, 168, 76, .45);
+    border-radius: 0;
+    background: transparent;
+    color: #E4C97E;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background .2s, border-color .2s;
+}
+
+.capital-header .capital-btn:hover {
+    background: rgba(201, 168, 76, .12);
+    border-color: #C9A84C;
+}
+
+.capital-header .capital-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #C9A84C;
+    color: #0E0C0A;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.capital-header .capital-nombre {
+    display: block;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.capital-header a:focus-visible,
+.capital-header button:focus-visible {
+    outline: 2px solid #E4C97E;
+    outline-offset: 4px;
+}
+
+@media (max-width: 1250px) {
+    .capital-header .capital-nav {
+        order: 3;
+        justify-content: flex-start;
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 650px) {
+    .capital-header {
+        gap: 16px;
+        padding: 17px 20px;
+    }
+
+    .capital-header .capital-logo {
+        font-size: 21px;
+    }
+
+    .capital-header .capital-cuenta {
+        justify-content: flex-start;
+    }
+
+    .capital-header .capital-nav {
+        gap: 24px;
+        padding-bottom: 8px;
+    }
+
+    .capital-header .capital-btn {
+        padding: 9px 11px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .capital-header *,
+    .capital-header *::after {
+        transition: none;
+    }
+}

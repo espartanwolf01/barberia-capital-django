@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -419,51 +420,18 @@
             }
         }
     </style>
+
+<!-- CAPITAL: RECURSOS COMPARTIDOS -->
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap">
+<link rel="stylesheet"
+      href="{% static 'principal/css/navegacion.css' %}?v=1">
+
 </head>
 
 <body>
 
-<header>
-    <div class="header-inner">
-
-        <a href="{% url 'inicio' %}" class="logo">
-            PELUQUERÍA CAPITAL
-            <span>BOGOTÁ · ESTILO Y PRECISIÓN</span>
-        </a>
-
-        <nav aria-label="Navegación principal">
-            <a href="{% url 'inicio' %}">Inicio</a>
-            <a href="{% url 'servicios' %}">Servicios</a>
-            <a href="{% url 'citas' %}">Citas</a>
-            <a href="{% url 'tienda' %}"
-               class="active"
-               aria-current="page">Tienda</a>
-            <a href="{% url 'contacto' %}">Contacto</a>
-        </nav>
-
-        <div class="header-actions">
-            <a href="{% url 'carrito' %}" class="btn-cuenta">
-    🛒 Carrito
-</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'perfil' %}" class="btn-cuenta">
-                    Mi perfil
-                </a>
-
-                {% if user.is_staff %}
-                    <a href="{% url 'panel' %}" class="btn-cuenta">
-                        Panel
-                    </a>
-                {% endif %}
-            {% else %}
-                <a href="{% url 'login' %}" class="btn-cuenta">
-                    Iniciar sesión
-                </a>
-            {% endif %}
-        </div>
-
-    </div>
-</header>
+{% include 'principal/includes/encabezado.html' %}
 
 <main>
 

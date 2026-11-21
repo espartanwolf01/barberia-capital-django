@@ -1,0 +1,66 @@
+{% with pagina=request.resolver_match.url_name %}
+<header class="capital-header">
+    <a class="capital-logo" href="{% url 'inicio' %}">
+        <span aria-hidden="true">💈</span>
+        Peluquería Capital
+    </a>
+
+    <nav class="capital-nav" aria-label="Navegación principal">
+        <a href="{% url 'inicio' %}"
+           {% if pagina == 'inicio' %}aria-current="page"{% endif %}>
+            Inicio
+        </a>
+        <a href="{% url 'servicios' %}"
+           {% if pagina == 'servicios' %}aria-current="page"{% endif %}>
+            Servicios
+        </a>
+        <a href="{% url 'citas' %}"
+           {% if pagina == 'citas' %}aria-current="page"{% endif %}>
+            Citas
+        </a>
+        <a href="{% url 'tienda' %}"
+           {% if pagina == 'tienda' %}aria-current="page"{% endif %}>
+            Tienda
+        </a>
+        <a href="{% url 'contacto' %}"
+           {% if pagina == 'contacto' %}aria-current="page"{% endif %}>
+            Contacto
+        </a>
+    </nav>
+
+    <div class="capital-cuenta">
+        {% if user.is_authenticated %}
+            {% if user.is_staff %}
+                <a class="capital-btn" href="{% url 'panel' %}">
+                    Panel admin
+                </a>
+            {% endif %}
+
+            <a class="capital-btn capital-perfil"
+               href="{% url 'perfil' %}"
+               aria-label="Mi perfil">
+                <span class="capital-avatar" aria-hidden="true">
+                    {{ user.get_username|first|upper }}
+                </span>
+                <span class="capital-nombre">
+                    {{ user.perfil.nombre_completo|default:user.get_username }}
+                </span>
+            </a>
+
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="capital-btn" type="submit">
+                    Cerrar sesión
+                </button>
+            </form>
+        {% else %}
+            <a class="capital-btn" href="{% url 'login' %}">
+                Iniciar sesión
+            </a>
+            <a class="capital-btn" href="{% url 'registro' %}">
+                Crear cuenta
+            </a>
+        {% endif %}
+    </div>
+</header>
+{% endwith %}

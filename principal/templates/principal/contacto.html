@@ -1,97 +1,608 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacto - Peluquería Capital</title>
+    <title>Contacto | Peluquería Capital</title>
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+        }
+
+        :root {
+            color-scheme: dark;
+            --gold: #C9A84C;
+            --light: #E4C97E;
+            --text: #EDE8DF;
+            --muted: #ADA193;
+            --border: rgba(201, 168, 76, .22);
         }
 
         body {
-            background: #0E0C0A;
-            color: #EDE8DF;
-            font-family: Arial, sans-serif;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #0E0C0A;
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .card {
-            background: #181410;
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            width: 90%;
-            max-width: 600px;
-            border: 1px solid #C9A84C;
+        .contacto {
+            max-width: 1240px;
+            margin: auto;
+            padding: 76px 28px 85px;
         }
 
-        h1 {
-            color: #C9A84C;
-            margin-bottom: 20px;
-        }
-
-        p {
-            margin: 10px 0;
-            font-size: 18px;
-        }
-
-        .numero {
-            font-size: 24px;
-            color: #C9A84C;
-            font-weight: bold;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 12px 25px;
+        .contacto a {
             text-decoration: none;
-            color: #C9A84C;
-            border: 1px solid #C9A84C;
-            transition: .3s;
         }
 
-        .btn:hover {
-            background: #C9A84C;
+        .contacto .eyebrow {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .contacto .intro {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            align-items: center;
+            gap: 65px;
+            margin-bottom: 50px;
+        }
+
+        .contacto h1 {
+            max-width: 680px;
+            margin: 18px 0 22px;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(44px, 5.5vw, 74px);
+            font-weight: 700;
+            line-height: 1.08;
+        }
+
+        .contacto h1 em {
+            color: var(--gold);
+        }
+
+        .contacto .intro-texto {
+            max-width: 520px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .contacto .destacado {
+            position: relative;
+            overflow: hidden;
+            padding: 36px;
+            border: 1px solid var(--border);
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(201, 168, 76, .12),
+                    transparent 65%
+                ),
+                #181410;
+        }
+
+        .contacto .destacado::before {
+            content: '✂';
+            position: absolute;
+            top: 7px;
+            right: 20px;
+            color: rgba(201, 168, 76, .1);
+            font-size: 110px;
+            pointer-events: none;
+        }
+
+        .contacto .destacado h2 {
+            position: relative;
+            margin: 18px 0 14px;
+            font-family: 'Playfair Display', serif;
+            font-size: 29px;
+        }
+
+        .contacto .destacado p:not(.eyebrow) {
+            position: relative;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .contacto .boton {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 46px;
+            margin-top: 23px;
+            padding: 14px 20px;
+            border: 1px solid var(--gold);
+            background: var(--gold);
             color: #0E0C0A;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+
+        .contacto .boton:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+
+        .contacto .tarjetas {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 65px;
+        }
+
+        .contacto .tarjeta {
+            min-width: 0;
+            padding: 28px;
+            border: 1px solid var(--border);
+            background: #181410;
+        }
+
+        .contacto .icono {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 43px;
+            height: 43px;
+            margin-bottom: 22px;
+            border: 1px solid var(--border);
+            color: var(--gold);
+            font-size: 20px;
+        }
+
+        .contacto .tarjeta h2 {
+            margin-bottom: 12px;
+            color: var(--text);
+            font-family: 'Playfair Display', serif;
+            font-size: 23px;
+        }
+
+        .contacto .tarjeta p {
+            margin-bottom: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .contacto .enlace {
+            color: var(--light);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.7;
+        }
+
+        .contacto .enlace:hover {
+            text-decoration: underline;
+            text-underline-offset: 5px;
+        }
+
+        .contacto .inferior {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 55px;
+            align-items: start;
+        }
+
+        .contacto .mensaje {
+            padding: 34px;
+            border: 1px solid var(--border);
+            background: #181410;
+        }
+
+        .contacto .titulo {
+            margin: 14px 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            line-height: 1.2;
+        }
+
+        .contacto .ayuda {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .contacto .campo {
+            display: grid;
+            gap: 10px;
+            margin-top: 23px;
+        }
+
+        .contacto label {
+            color: var(--light);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .contacto input,
+        .contacto select,
+        .contacto textarea {
+            width: 100%;
+            min-width: 0;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            background: #0E0C0A;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .contacto textarea {
+            min-height: 125px;
+            resize: vertical;
+        }
+
+        .contacto input::placeholder,
+        .contacto textarea::placeholder {
+            color: #ADA193;
+        }
+
+        .contacto .mensaje .boton {
+            width: 100%;
+        }
+
+        .contacto .nota {
+            margin-top: 14px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .contacto .preguntas {
+            padding-top: 12px;
+        }
+
+        .contacto details {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .contacto summary {
+            padding: 22px 0;
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.6;
+            cursor: pointer;
+        }
+
+        .contacto details p {
+            padding: 0 0 22px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .contacto .recordatorio {
+            margin-top: 28px;
+            padding-left: 18px;
+            border-left: 2px solid var(--gold);
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .contacto-footer {
+            padding: 30px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.9;
+            letter-spacing: 1px;
+        }
+
+        .contacto-footer strong {
+            color: var(--gold);
+        }
+
+        .contacto :focus-visible {
+            outline: 2px solid var(--light);
+            outline-offset: 4px;
+        }
+
+        @media (max-width: 850px) {
+            .contacto .intro,
+            .contacto .inferior {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .contacto .tarjetas {
+                grid-template-columns: 1fr;
+                margin-bottom: 40px;
+            }
+
+            .contacto .tarjeta {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .contacto {
+                padding: 45px 20px 55px;
+            }
+
+            .contacto .destacado,
+            .contacto .mensaje {
+                padding: 26px 22px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .contacto .boton {
+                transition: none;
+            }
         }
     </style>
+
+<!-- CAPITAL: RECURSOS COMPARTIDOS -->
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap">
+<link rel="stylesheet"
+      href="{% static 'principal/css/navegacion.css' %}?v=1">
+
 </head>
 
 <body>
+{% include 'principal/includes/encabezado.html' %}
 
-<div class="card">
+<main class="contacto">
 
-    <h1>💈 Contacto</h1>
+    <section class="intro" aria-labelledby="contacto-titulo">
+        <div>
+            <p class="eyebrow">Contacto · Bogotá</p>
 
-    <p>
-        <strong>Peluquería Capital</strong>
-    </p>
+            <h1 id="contacto-titulo">
+                Tu próximo estilo<br>
+                empieza con un <em>hola.</em>
+            </h1>
 
-    <p>
-        Bogotá, Colombia
-    </p>
+            <p class="intro-texto">
+                ¿Un nuevo corte, una consulta o ayuda con tu reserva?
+                Hablemos. En Peluquería Capital te ayudamos a
+                encontrar lo que buscas.
+            </p>
+        </div>
 
-    <p class="numero">
-        📞 324 608 3901
-    </p>
+        <aside class="destacado">
+            <p class="eyebrow">Tu espacio, tu estilo</p>
+            <h2>Hazle espacio a un buen corte.</h2>
+            <p>
+                Elige tu servicio, tu barbero y el horario
+                que mejor se adapte a ti.
+            </p>
+            <a class="boton" href="{% url 'citas' %}">
+                Reservar mi cita →
+            </a>
+        </aside>
+    </section>
 
-    <p>
-        Contáctanos para reservas, consultas y atención personalizada.
-    </p>
+    <section class="tarjetas" aria-label="Canales de contacto">
 
-    <a href="/" class="btn">
-        Volver al inicio
-    </a>
+        <article class="tarjeta">
+            <span class="icono" aria-hidden="true">↗</span>
+            <h2>Escríbenos</h2>
+            <p>
+                Consulta por servicios, productos o detalles
+                de tu próxima visita.
+            </p>
+            <a class="enlace"
+               href="https://wa.me/573246083901?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Peluquer%C3%ADa%20Capital.">
+                Abrir WhatsApp →
+            </a>
+        </article>
 
-</div>
+        <article class="tarjeta">
+            <span class="icono" aria-hidden="true">☎</span>
+            <h2>Hablemos</h2>
+            <p>
+                ¿Prefieres una llamada? Comunícate con nosotros
+                para resolver tus dudas.
+            </p>
+            <a class="enlace" href="tel:+573246083901">
+                +57 324 608 3901
+            </a>
+        </article>
+
+        <article class="tarjeta">
+            <span class="icono" aria-hidden="true">⌖</span>
+            <h2>Nos vemos en Bogotá</h2>
+            <p>
+                Escríbenos para confirmar la dirección y
+                las indicaciones antes de visitarnos.
+            </p>
+            <a class="enlace"
+               href="https://wa.me/573246083901?text=Hola%2C%20%C2%BFme%20comparten%20la%20direcci%C3%B3n%20de%20la%20barber%C3%ADa%20y%20c%C3%B3mo%20llegar%3F">
+                Consultar ubicación →
+            </a>
+        </article>
+
+    </section>
+
+    <section class="inferior">
+
+        <div class="mensaje">
+            <p class="eyebrow">Cuéntanos qué necesitas</p>
+            <h2 class="titulo">Te leemos por WhatsApp.</h2>
+            <p class="ayuda">
+                Prepara tu consulta aquí y envíala directamente
+                desde tu WhatsApp.
+            </p>
+
+            <form id="contacto-form"
+                  action="https://wa.me/573246083901"
+                  method="get">
+
+                <div class="campo">
+                    <label for="contacto-nombre">
+                        Tu nombre · opcional
+                    </label>
+                    <input id="contacto-nombre"
+                           type="text"
+                           autocomplete="name"
+                           maxlength="150"
+                           placeholder="¿Cómo te llamas?">
+                </div>
+
+                <div class="campo">
+                    <label for="contacto-asunto">
+                        ¿De qué hablamos?
+                    </label>
+                    <select id="contacto-asunto">
+                        <option>Consulta general</option>
+                        <option>Servicios y precios</option>
+                        <option>Ayuda con mi cita</option>
+                        <option>Productos de la tienda</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="contacto-mensaje">Tu mensaje</label>
+                    <textarea id="contacto-mensaje"
+                              name="text"
+                              maxlength="1500"
+                              placeholder="Cuéntanos en qué podemos ayudarte…"
+                              required></textarea>
+                </div>
+
+                <button type="submit" class="boton">
+                    Continuar en WhatsApp ↗
+                </button>
+
+                <p class="nota">
+                    WhatsApp se abrirá con tu mensaje preparado.
+                    Allí podrás revisarlo y enviarlo.
+                </p>
+            </form>
+        </div>
+
+        <div class="preguntas">
+            <p class="eyebrow">Antes de tu visita</p>
+            <h2 class="titulo">Dudas rápidas.</h2>
+
+            <details>
+                <summary>¿Cómo puedo reservar una cita?</summary>
+                <p>
+                    Inicia sesión y entra en
+                    <a class="enlace" href="{% url 'citas' %}">Citas</a>.
+                    Selecciona servicio, barbero, fecha y hora.
+                    Tu reserva aparecerá en tu historial.
+                </p>
+            </details>
+
+            <details>
+                <summary>¿Puedo cambiar o cancelar mi reserva?</summary>
+                <p>
+                    Sí. Desde Mis citas puedes reprogramar,
+                    cambiar el servicio o cancelar una cita
+                    que todavía esté pendiente.
+                </p>
+            </details>
+
+            <details>
+                <summary>¿Dónde consulto los servicios y precios?</summary>
+                <p>
+                    Visita
+                    <a class="enlace" href="{% url 'servicios' %}">
+                        Servicios
+                    </a>.
+                    Si necesitas orientación sobre un corte o
+                    tratamiento, escríbenos por WhatsApp.
+                </p>
+            </details>
+
+            <details>
+                <summary>¿También tienen productos de barbería?</summary>
+                <p>
+                    Sí. En la
+                    <a class="enlace" href="{% url 'tienda' %}">Tienda</a>
+                    puedes consultar productos, herramientas
+                    y sus existencias disponibles.
+                </p>
+            </details>
+
+            <p class="recordatorio">
+                Para confirmar una reserva, consulta siempre
+                el estado de la cita dentro de tu cuenta.
+            </p>
+        </div>
+
+    </section>
+</main>
+
+<footer class="contacto-footer">
+    <strong>PELUQUERÍA CAPITAL</strong>
+    · BOGOTÁ, COLOMBIA · © {% now "Y" %}
+</footer>
+
+<script>
+    document.getElementById("contacto-form").addEventListener(
+        "submit",
+        function (evento) {
+            evento.preventDefault();
+
+            const nombre = document.getElementById(
+                "contacto-nombre"
+            ).value.trim();
+
+            const asunto = document.getElementById(
+                "contacto-asunto"
+            ).value;
+
+            const campo = document.getElementById(
+                "contacto-mensaje"
+            );
+
+            const mensaje = campo.value.trim();
+
+            if (!mensaje) {
+                campo.setCustomValidity("Escribe tu consulta.");
+                campo.reportValidity();
+                return;
+            }
+
+            campo.setCustomValidity("");
+
+            const saludo = nombre
+                ? "Hola, soy " + nombre + "."
+                : "Hola, Peluquería Capital.";
+
+            const texto =
+                saludo + "\n\n" +
+                "Asunto: " + asunto + "\n\n" +
+                mensaje;
+
+            window.location.assign(
+                "https://wa.me/573246083901?text=" +
+                encodeURIComponent(texto)
+            );
+        }
+    );
+
+    document.getElementById("contacto-mensaje").addEventListener(
+        "input",
+        function () {
+            this.setCustomValidity("");
+        }
+    );
+</script>
 
 </body>
 </html>

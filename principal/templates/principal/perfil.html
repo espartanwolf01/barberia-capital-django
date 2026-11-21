@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -367,28 +368,18 @@
             }
         }
     </style>
+
+<!-- CAPITAL: RECURSOS COMPARTIDOS -->
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap">
+<link rel="stylesheet"
+      href="{% static 'principal/css/navegacion.css' %}?v=1">
+
 </head>
 
 <body>
 
-<header>
-    <a href="{% url 'inicio' %}" class="logo">
-        BARBERÍA CAPITAL
-    </a>
-
-    <nav aria-label="Navegación principal">
-        <a href="{% url 'inicio' %}">Inicio</a>
-        <a href="{% url 'servicios' %}">Servicios</a>
-        <a href="{% url 'contacto' %}">Contacto</a>
-
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="logout">
-                Cerrar sesión
-            </button>
-        </form>
-    </nav>
-</header>
+{% include 'principal/includes/encabezado.html' %}
 
 <main class="container">
 
