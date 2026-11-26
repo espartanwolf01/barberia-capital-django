@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -163,9 +164,14 @@
         }
     }
   </style>
+
+<link rel="stylesheet"
+      href="{% static 'principal/css/fondo_animado.css' %}?v=3">
 </head>
 
 <body>
+{% include 'principal/includes/fondo_animado.html' %}
+
 
 <div class="registro-container">
 
