@@ -29,7 +29,30 @@ def inicio(request):
 
 
 def servicios(request):
-    return render(request, "principal/servicios.html")
+    from django.shortcuts import render
+    from .models import Servicio
+
+    disponibles = list(
+        Servicio.objects.filter(activo=True).order_by("nombre")
+    )
+
+    categorias = [
+        {
+            "nombre": etiqueta,
+            "servicios": [
+                servicio
+                for servicio in disponibles
+                if servicio.categoria == valor
+            ],
+        }
+        for valor, etiqueta in Servicio.Categoria.choices
+    ]
+
+    return render(
+        request,
+        "principal/servicios.html",
+        {"categorias": categorias},
+    )
 
 
 def contacto(request):

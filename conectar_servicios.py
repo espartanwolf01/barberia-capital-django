@@ -1,0 +1,399 @@
+import ast
+import shutil
+from datetime import datetime
+from pathlib import Path
+
+
+BASE = Path(__file__).resolve().parent
+VIEWS = BASE / "principal" / "views.py"
+HTML = (
+    BASE / "principal" / "templates"
+    / "principal" / "servicios.html"
+)
+
+
+VISTA = '''def servicios(request):
+    from django.shortcuts import render
+    from .models import Servicio
+
+    disponibles = list(
+        Servicio.objects.filter(activo=True).order_by("nombre")
+    )
+
+    categorias = [
+        {
+            "nombre": etiqueta,
+            "servicios": [
+                servicio
+                for servicio in disponibles
+                if servicio.categoria == valor
+            ],
+        }
+        for valor, etiqueta in Servicio.Categoria.choices
+    ]
+
+    return render(
+        request,
+        "principal/servicios.html",
+        {"categorias": categorias},
+    )
+'''
+
+
+PLANTILLA = """
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios | Peluquería Capital</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --gold: #C9A84C;
+            --light: #E4C97E;
+            --dark: #0E0C0A;
+            --text: #EDE8DF;
+            --muted: #ADA193;
+            --border: rgba(201, 168, 76, .2);
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .servicios-hero {
+            padding: 85px 24px 65px;
+            text-align: center;
+        }
+
+        .servicios-eyebrow {
+            color: var(--gold);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .servicios-hero h1 {
+            margin: 20px 0;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(42px, 6vw, 76px);
+            line-height: 1.1;
+        }
+
+        .servicios-hero em {
+            color: var(--gold);
+        }
+
+        .servicios-subtitulo {
+            max-width: 540px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        .servicios-catalogo {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            width: 92%;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        .servicios-categoria {
+            position: relative;
+            min-width: 0;
+            padding: 35px 28px;
+            border: 1px solid var(--border);
+            background: #181410;
+        }
+
+        .servicios-numero {
+            display: block;
+            margin-bottom: 18px;
+            color: rgba(201, 168, 76, .35);
+            font-family: 'Playfair Display', serif;
+            font-size: 40px;
+        }
+
+        .servicios-categoria h2 {
+            margin-bottom: 24px;
+            color: var(--light);
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+        }
+
+        .servicios-lista {
+            list-style: none;
+        }
+
+        .servicios-item {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 17px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+        }
+
+        .servicios-item:last-child {
+            border-bottom: 0;
+        }
+
+        .servicios-nombre {
+            min-width: 0;
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .servicios-precio {
+            flex-shrink: 0;
+            color: var(--light);
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .servicios-vacio {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .servicios-cta {
+            padding: 75px 24px;
+            text-align: center;
+        }
+
+        .servicios-cta h2 {
+            margin: 18px 0;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(28px, 4vw, 42px);
+        }
+
+        .servicios-cta p:not(.servicios-eyebrow) {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .servicios-boton {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            margin-top: 27px;
+            padding: 14px 27px;
+            border: 1px solid var(--gold);
+            background: var(--gold);
+            color: var(--dark);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s;
+        }
+
+        .servicios-boton:hover {
+            background: var(--light);
+        }
+
+        .servicios-boton:focus-visible {
+            outline: 2px solid var(--light);
+            outline-offset: 5px;
+        }
+
+        .servicios-footer {
+            padding: 30px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        .servicios-footer strong {
+            color: var(--gold);
+        }
+
+        @media (max-width: 900px) {
+            .servicios-catalogo {
+                grid-template-columns: 1fr;
+                max-width: 650px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .servicios-hero {
+                padding: 55px 20px 40px;
+            }
+
+            .servicios-categoria {
+                padding: 28px 22px;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet"
+          href="{% static 'principal/css/navegacion.css' %}?v=1">
+    <link rel="stylesheet"
+          href="{% static 'principal/css/fondo_animado.css' %}?v=3">
+</head>
+
+<body>
+{% include 'principal/includes/fondo_animado.html' %}
+{% include 'principal/includes/encabezado.html' %}
+
+<main>
+    <section class="servicios-hero">
+        <p class="servicios-eyebrow">Servicios · Bogotá</p>
+        <h1>Nuestros <em>servicios</em></h1>
+        <p class="servicios-subtitulo">
+            Encuentra tu próximo corte, cuida tu barba
+            o renueva tu estilo con color.
+        </p>
+    </section>
+
+    <div class="servicios-catalogo">
+        {% for categoria in categorias %}
+            <section class="servicios-categoria"
+                     aria-labelledby="categoria-{{ forloop.counter }}">
+                <span class="servicios-numero" aria-hidden="true">
+                    0{{ forloop.counter }}
+                </span>
+
+                <h2 id="categoria-{{ forloop.counter }}">
+                    {{ categoria.nombre }}
+                </h2>
+
+                <ul class="servicios-lista">
+                    {% for servicio in categoria.servicios %}
+                        <li class="servicios-item">
+                            <span class="servicios-nombre">
+                                {{ servicio.nombre }}
+                            </span>
+                            <span class="servicios-precio">
+                                ${{ servicio.precio|floatformat:"0g" }}
+                            </span>
+                        </li>
+                    {% empty %}
+                        <li class="servicios-vacio">
+                            Por ahora no hay servicios disponibles
+                            en esta categoría.
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endfor %}
+    </div>
+
+    <section class="servicios-cta">
+        <p class="servicios-eyebrow">Reserva tu espacio</p>
+        <h2>¿Listo para tu próximo corte?</h2>
+        <p>Selecciona tu servicio, tu barbero y tu horario.</p>
+        <a class="servicios-boton" href="{% url 'citas' %}">
+            Agendar cita →
+        </a>
+    </section>
+</main>
+
+<footer class="servicios-footer">
+    <strong>PELUQUERÍA CAPITAL</strong>
+    · BOGOTÁ, COLOMBIA · © {% now "Y" %}
+</footer>
+</body>
+</html>
+"""
+
+
+def ejecutar():
+    requeridos = [
+        VIEWS,
+        HTML,
+        HTML.parent / "includes" / "encabezado.html",
+        HTML.parent / "includes" / "fondo_animado.html",
+    ]
+
+    for ruta in requeridos:
+        if not ruta.is_file():
+            raise FileNotFoundError(
+                f"No encuentro: {ruta}. "
+                "Guarda el script junto a manage.py."
+            )
+
+    original = VIEWS.read_text(encoding="utf-8-sig")
+    arbol = ast.parse(original)
+
+    funciones = [
+        nodo
+        for nodo in arbol.body
+        if isinstance(nodo, ast.FunctionDef)
+        and nodo.name == "servicios"
+    ]
+
+    if len(funciones) != 1:
+        raise ValueError(
+            "No encuentro una única función servicios. "
+            "No se modificó ningún archivo."
+        )
+
+    funcion = funciones[0]
+    lineas = original.splitlines(keepends=True)
+
+    nuevo = (
+        "".join(lineas[:funcion.lineno - 1])
+        + VISTA
+        + "".join(lineas[funcion.end_lineno:])
+    )
+
+    # Comprueba la sintaxis antes de escribir.
+    ast.parse(nuevo)
+
+    cambios = {
+        VIEWS: nuevo,
+        HTML: PLANTILLA.lstrip(),
+    }
+
+    fecha = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    respaldo = (
+        BASE.parent
+        / f"{BASE.name}_respaldo_servicios_{fecha}"
+    )
+
+    for ruta in cambios:
+        copia = respaldo / ruta.relative_to(BASE)
+        copia.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ruta, copia)
+
+    for ruta, contenido in cambios.items():
+        ruta.write_text(contenido, encoding="utf-8")
+        print(f"Actualizado: {ruta.relative_to(BASE)}")
+
+    print(f"\nRespaldo: {respaldo}")
+    print("Servicios ahora consulta la base de datos.")
+    print("Actualiza la página con Ctrl + F5.")
+
+
+if __name__ == "__main__":
+    try:
+        ejecutar()
+    except (OSError, ValueError, SyntaxError) as error:
+        print(f"No se pudo completar: {error}")
