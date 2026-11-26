@@ -79,3 +79,14 @@ urlpatterns = [
         name="exportar_general",
     ),
 ]
+
+from . import roles_views
+
+urlpatterns += [
+    path("mi-acceso", roles_views.mi_acceso, name="mi_acceso"),
+    path("mi-cuenta", roles_views.panel_cliente, name="panel_cliente"),
+    path("barbero", roles_views.panel_barbero, name="panel_barbero"),
+    path("barbero/citas/<int:cita_id>/estado", roles_views.estado_barbero, name="estado_barbero"),
+    path("panel/cuentas", roles_views.gestionar_cuentas, name="gestionar_cuentas"),
+    path("panel/cuentas/<int:usuario_id>/estado", roles_views.activar_cuenta, name="activar_cuenta"),
+]

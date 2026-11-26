@@ -1,0 +1,28 @@
+{% extends 'principal/roles_base.html' %}
+{% block titulo %}Mi agenda{% endblock %}
+{% block contenido %}
+<p class="roles-etiqueta">Acceso de barbero</p><h1>Hola, {{ barbero_actual.nombre }}</h1>
+<p class="roles-texto">{{ barbero_actual.especialidad }}. Esta agenda muestra únicamente las citas que tienes asignadas.</p>
+<div class="roles-acciones"><a class="roles-btn" href="{% url 'perfil' %}">Mi perfil</a><a class="roles-btn" href="{% url 'inicio' %}">Ver sitio</a></div>
+<section class="roles-stats" aria-label="Resumen de mi agenda">
+<div class="roles-stat"><p>Pendientes</p><strong>{{ resumen.pendientes }}</strong></div>
+<div class="roles-stat"><p>Atendidas</p><strong>{{ resumen.atendidas }}</strong></div>
+<div class="roles-stat"><p>Canceladas</p><strong>{{ resumen.canceladas }}</strong></div>
+</section>
+<section class="roles-tarjeta"><h2>Filtrar mi agenda</h2>
+<form method="get" class="roles-filtro">
+{% for campo in filtro %}<div class="roles-campo">{{ campo.label_tag }}{{ campo }}{{ campo.errors }}</div>{% endfor %}
+<button class="roles-btn dorado" type="submit">Filtrar</button><a class="roles-btn" href="{% url 'panel_barbero' %}">Ver todas</a>
+</form></section>
+<section class="roles-tarjeta"><h2>Mis citas asignadas</h2><div class="roles-tabla"><table>
+<thead><tr><th>Cita</th><th>Cliente</th><th>Servicio</th><th>Fecha y hora</th><th>Estado</th><th>Acciones</th></tr></thead>
+<tbody>{% for cita in agenda %}<tr>
+<td>#{{ cita.pk }}</td><td>{{ cita.cliente.perfil.nombre_completo|default:cita.cliente.get_username }}<small>{{ cita.cliente.perfil.telefono|default:'Sin teléfono registrado' }}</small></td>
+<td>{{ cita.servicio.nombre }}{% if cita.notas %}<small class="roles-notas">{{ cita.notas }}</small>{% endif %}</td>
+<td>{{ cita.fecha|date:'d/m/Y' }}<small>{{ cita.hora|time:'H:i' }}</small></td>
+<td><span class="roles-estado {{ cita.estado }}">{{ cita.get_estado_display }}</span></td>
+<td>{% if cita.estado == 'pendiente' %}<form action="{% url 'estado_barbero' cita.pk %}" method="post">{% csrf_token %}<button name="estado" value="atendida" class="roles-btn" type="submit">Atendida</button></form>
+<form action="{% url 'estado_barbero' cita.pk %}" method="post" onsubmit="return confirm('¿Cancelar esta cita?');">{% csrf_token %}<button name="estado" value="cancelada" class="roles-btn peligro" type="submit">Cancelar</button></form>
+{% else %}<span class="roles-ayuda">Finalizada</span>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="6" class="roles-vacio">No hay citas para esta consulta.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

@@ -1,3 +1,4 @@
+from .cuentas_forms import BarberoVinculoForm
 from django.contrib import admin
 
 from .models import Barbero, Cita, Perfil, Producto, Servicio
@@ -22,9 +23,11 @@ class ServicioAdmin(admin.ModelAdmin):
 
 @admin.register(Barbero)
 class BarberoAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "especialidad", "activo")
+    form = BarberoVinculoForm
+    list_display = ("nombre", "especialidad", "usuario", "activo")
     list_filter = ("activo",)
-    search_fields = ("nombre", "especialidad")
+    search_fields = ("nombre", "especialidad", "usuario__username", "usuario__email")
+    list_select_related = ("usuario",)
 
 
 @admin.register(Cita)

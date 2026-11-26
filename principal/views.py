@@ -60,6 +60,9 @@ def contacto(request):
 
 
 def registro(request):
+    from .roles import destino_usuario
+    if request.user.is_authenticated:
+        return redirect(destino_usuario(request.user))
     formulario = RegistroForm(
         request.POST if request.method == "POST" else None
     )
@@ -89,7 +92,7 @@ def registro(request):
             )
         else:
             login(request, usuario)
-            return redirect("inicio")
+            return redirect("panel_cliente")
 
     return render(
         request,
@@ -99,32 +102,31 @@ def registro(request):
 
 
 def iniciar_sesion(request):
+    from .roles import destino_usuario
+
     if request.user.is_authenticated:
-        return redirect("inicio")
+        return redirect(destino_usuario(request.user))
 
     error = None
-
     if request.method == "POST":
-        correo = request.POST.get("dato", "").strip().lower()
+        dato = request.POST.get("dato", "").strip()
         password = request.POST.get("password", "")
-
-        usuario = authenticate(
-            request,
-            username=correo,
-            password=password,
-        )
-
+        cuenta = Usuario.objects.filter(username=dato).first()
+        if cuenta is None:
+            coincidencias = list(Usuario.objects.filter(email__iexact=dato)[:2])
+            cuenta = coincidencias[0] if len(coincidencias) == 1 else None
+        usuario = authenticate(request, username=cuenta.get_username(), password=password) if cuenta else None
         if usuario is not None:
-            login(request, usuario)
-            return redirect("inicio")
+            barbero_inactivo = (
+                not usuario.is_staff
+                and Barbero.objects.filter(usuario=usuario, activo=False).exists()
+            )
+            if not barbero_inactivo:
+                login(request, usuario)
+                return redirect(destino_usuario(usuario))
+        error = "Datos incorrectos o cuenta inactiva."
 
-        error = "Correo o contraseña incorrectos, o cuenta inactiva."
-
-    return render(
-        request,
-        "principal/login.html",
-        {"error": error},
-    )
+    return render(request, "principal/login.html", {"error": error})
 
 
 @require_POST

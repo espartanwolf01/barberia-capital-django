@@ -11,6 +11,11 @@ class Perfil(models.Model):
     nombre_completo = models.CharField(max_length=150)
     telefono = models.CharField(max_length=20)
 
+    @property
+    def rol(self):
+        from .roles import rol_usuario
+        return rol_usuario(self.usuario).capitalize()
+
     def __str__(self):
         return self.nombre_completo
 
@@ -46,6 +51,13 @@ class Servicio(models.Model):
 
 
 class Barbero(models.Model):
+    usuario = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="barbero",
+        null=True,
+        blank=True,
+    )
     nombre = models.CharField(max_length=150)
     especialidad = models.CharField(
         max_length=150,

@@ -34,6 +34,10 @@
                 <a class="capital-btn" href="{% url 'panel' %}">
                     Panel admin
                 </a>
+            {% elif user.barbero %}
+                <a class="capital-btn" href="{% url 'panel_barbero' %}">Mi agenda</a>
+            {% else %}
+                <a class="capital-btn" href="{% url 'panel_cliente' %}">Mi cuenta</a>
             {% endif %}
 
             <a class="capital-btn capital-perfil"

@@ -1,0 +1,16 @@
+{% extends 'principal/roles_base.html' %}
+{% block titulo %}Gestión de cuentas{% endblock %}
+{% block contenido %}
+<p class="roles-etiqueta">Administración</p><h1>Usuarios y accesos</h1>
+<p class="roles-texto">Los clientes se registran con acceso de cliente. Aquí puedes crear cuentas de barbero y administrar el acceso al sistema.</p>
+<div class="roles-acciones"><a class="roles-btn" href="{% url 'panel' %}">Volver al panel</a><a class="roles-btn" href="{% url 'admin:principal_barbero_changelist' %}">Gestionar barberos</a></div>
+<section class="roles-tarjeta"><h2>Crear una cuenta</h2><p class="roles-ayuda">Para un barbero, selecciona su ficha sin cuenta vinculada. Solo el superadministrador puede crear otros administradores.</p>
+<form method="post">{% csrf_token %}{{ formulario.non_field_errors }}<div class="roles-form">
+{% for campo in formulario %}<div class="roles-campo">{{ campo.label_tag }}{{ campo }}{{ campo.errors }}</div>{% endfor %}
+</div><div class="roles-acciones"><button class="roles-btn dorado" type="submit">Guardar cuenta</button></div></form></section>
+<section class="roles-tarjeta"><h2>Cuentas guardadas</h2><div class="roles-tabla"><table>
+<thead><tr><th>Nombre</th><th>Acceso</th><th>Rol</th><th>Estado</th><th>Acción</th></tr></thead><tbody>
+{% for cuenta in cuentas %}<tr><td>{{ cuenta.usuario.perfil.nombre_completo|default:cuenta.usuario.get_username }}</td><td class="roles-cuenta-enlace">{{ cuenta.usuario.get_username }}<small>{{ cuenta.usuario.email }}</small></td><td>{{ cuenta.rol|capfirst }}</td><td>{% if cuenta.usuario.is_active %}Activo{% else %}Inactivo{% endif %}</td><td>
+{% if cuenta.usuario.pk != user.pk %}{% if user.is_superuser or not cuenta.usuario.is_staff and not cuenta.usuario.is_superuser %}<form action="{% url 'activar_cuenta' cuenta.usuario.pk %}" method="post">{% csrf_token %}<button type="submit" class="roles-btn">{% if cuenta.usuario.is_active %}Desactivar{% else %}Activar{% endif %}</button></form>{% else %}Solo superadministrador{% endif %}{% else %}Tu cuenta{% endif %}
+</td></tr>{% empty %}<tr><td colspan="5" class="roles-vacio">No hay cuentas.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

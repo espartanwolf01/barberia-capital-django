@@ -412,11 +412,7 @@
                 </h2>
 
                 <p>
-                    {% if user.is_staff %}
-                        Administrador
-                    {% else %}
-                        Cliente
-                    {% endif %}
+                    {{ datos_perfil.rol }}
                 </p>
             </div>
 

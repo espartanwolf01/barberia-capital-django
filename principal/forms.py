@@ -1,3 +1,4 @@
+from django.db.models import Q
 from datetime import datetime, time
 
 from django import forms
@@ -168,7 +169,7 @@ class CitaForm(forms.ModelForm):
             Servicio.objects.filter(activo=True)
         )
         self.fields["barbero"].queryset = (
-            Barbero.objects.filter(activo=True)
+            Barbero.objects.filter(activo=True).filter(Q(usuario__isnull=True) | Q(usuario__is_active=True))
         )
 
         hoy = datetime.now(

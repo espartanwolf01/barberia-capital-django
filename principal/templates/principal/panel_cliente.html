@@ -1,0 +1,14 @@
+{% extends 'principal/roles_base.html' %}
+{% block titulo %}Mi cuenta{% endblock %}
+{% block contenido %}
+<p class="roles-etiqueta">Acceso de cliente</p><h1>Tu estilo, tu cuenta.</h1>
+<p class="roles-texto">Hola, {{ user.perfil.nombre_completo|default:user.get_username }}. Aquí puedes consultar tus reservas y pedidos.</p>
+<div class="roles-acciones"><a class="roles-btn dorado" href="{% url 'citas' %}">Reservar o administrar mis citas</a><a class="roles-btn" href="{% url 'perfil' %}">Editar mi perfil</a><a class="roles-btn" href="{% url 'tienda' %}">Tienda</a><a class="roles-btn" href="{% url 'carrito' %}">Mi carrito</a></div>
+<section class="roles-stats"><div class="roles-stat"><p>Mis citas pendientes</p><strong>{{ pendientes }}</strong></div><div class="roles-stat"><p>Mis pedidos registrados</p><strong>{{ total_pedidos_cliente }}</strong></div></section>
+<section class="roles-tarjeta"><h2>Mis últimas citas</h2><div class="roles-tabla"><table><thead><tr><th>Servicio</th><th>Barbero</th><th>Fecha</th><th>Estado</th></tr></thead><tbody>
+{% for cita in citas_cliente %}<tr><td>{{ cita.servicio.nombre }}</td><td>{{ cita.barbero.nombre }}</td><td>{{ cita.fecha|date:'d/m/Y' }} · {{ cita.hora|time:'H:i' }}</td><td>{{ cita.get_estado_display }}</td></tr>{% empty %}<tr><td colspan="4" class="roles-vacio">Todavía no tienes reservas.</td></tr>{% endfor %}
+</tbody></table></div></section>
+<section class="roles-tarjeta"><h2>Mis últimos pedidos</h2><p class="roles-ayuda">Un pedido registrado no acredita un pago recibido.</p><div class="roles-tabla"><table><thead><tr><th>Pedido</th><th>Fecha</th><th>Total</th><th>Detalle</th></tr></thead><tbody>
+{% for pedido in pedidos_cliente %}<tr><td>#{{ pedido.pk }}</td><td>{{ pedido.fecha|date:'d/m/Y H:i' }}</td><td>${{ pedido.total|floatformat:'0g' }}</td><td><a href="{% url 'compra_exitosa' pedido.pk %}">Ver confirmación</a></td></tr>{% empty %}<tr><td colspan="4" class="roles-vacio">Todavía no tienes pedidos.</td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}
